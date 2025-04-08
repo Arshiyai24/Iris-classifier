@@ -1,4 +1,6 @@
-
+👩‍💻 Developed by: I.Arshiya
+🎓 Internship Domain: Data Science
+🏢 Company: Oasis Infobyte
 
 # Iris Flower Classification - Data Science Internship
 
