@@ -60,6 +60,9 @@ The goal is to apply machine learning algorithms to this dataset to classify the
 - **Dataset**: The dataset consists of 150 rows, with each row containing 4 features (Sepal Length, Sepal Width, Petal Length, Petal Width) and the corresponding species label.
 - **Algorithms**: We will apply multiple machine learning models to classify the iris flowers and compare their performance.
 
+  ## Output
+  
+
 
 
 
