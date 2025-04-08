@@ -1,0 +1,180 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
+import plotly.graph_objects as go
+import plotly.io as pio
+from xgboost import XGBRegressor
+# Scikit-learn imports
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+# Joblib for model saving/loading
+import joblib
+# Warnings filter
+from warnings import filterwarnings
+filterwarnings(action='ignore')
+df.info()
+df.shape
+df.dtypes
+print("Number of rows are:",df.shape[0])
+print("Number of columns are:",df.shape[1])
+dup=df.duplicated().sum()
+print(f'number of duplicate rows are: {dup}')
+df.isnull().sum()
+import seaborn as sns
+import matplotlib.pyplot as plt
+sns.heatmap(df.isnull(),cbar=False,cmap='viridis')
+plt.show()
+duplicate_count=df.duplicated().sum()
+print(duplicate_count)
+df['Species'].value_counts().plot(kind='pie',autopct='%1.1f%%',figsize=(6,6),shadow=True)
+sns.FacetGrid(df,hue='Species',height=4).map(plt.scatter,"SepalWidthCm","PetalLengthCm").add_legend()
+#plot for Sepal width
+fig=plt.figure(figsize=(10,6))
+sns.barplot(x='Species',y='SepalWidthCm',data=df,palette='Greens')
+plt.title('Relation of Sepal Width with Species')
+plt.xlabel('Species')
+plt.ylabel('Sepal Width (cm)')
+plt.show()
+#Scatter plot for Sepal Length vs Sepal Width
+plt.figure(figsize=(10,6))
+sns.scatterplot(x='SepalLengthCm',y='SepalWidthCm',hue='Species',data=df,palette='Set1')
+plt.title('Scatter plot  of Sepal Length vs Sepal Width')
+plt.xlabel('Sepal Length (cm)')
+plt.ylabel('Sepal Width (cm)')
+plt.show()
+#Swarm plot for Sepal Length
+plt.figure(figsize=(10,6))
+sns.swarmplot(x='Species',y='SepalLengthCm',data=df,color='purple')
+plt.title('Relation of Sepal Length with Species')
+plt.xlabel('Species')
+plt.ylabel('Sepal Length (cm)')
+plt.show()
+# Swarm plot for Sepal Width
+plt.figure(figsize=(10,6))
+sns.swarmplot(x='Species',y='SepalWidthCm',data=df,color='purple')
+plt.title('Relation of with SepalWidth Species')
+plt.xlabel('Species')
+plt.ylabel('Sepal Width (cm)')
+plt.show()
+# Swarm plot for Petal Length
+plt.figure(figsize=(10,5))
+sns.swarmplot(x='Species',y='PetalLengthCm',data=df,color='black')
+plt.title('Relation of with PetalLengthCm  Species')
+plt.xlabel('Species')
+plt.ylabel('Petal Length (cm)')
+plt.show()
+# Swarm plot for Petal Width
+plt.figure(figsize=(10,5))
+sns.swarmplot(x='Species',y='PetalWidthCm',data=df,color='black')
+plt.title('Relation of with PetalWidthCm  Species')
+plt.xlabel('Species')
+plt.ylabel('Petal Width (cm)')
+plt.show()
+#Pairplot of the Iris dataset
+sns.pairplot(df,hue='Species',palette='coolwarm')
+plt.show()
+num=['SepalLengthCm','SepalWidthCm','PetalLengthCm','PetalWidthCm']
+for i,col in enumerate(num):
+    plt.figure(figsize=(8,6))
+    sns.histplot(df[col],kde=True)
+    plt.title(f'Distribution of {col}')
+    plt.xlabel(col)
+    plt.ylabel('Frequency')
+    plt.show()
+num =['SepalLengthCm','SepalWidthCm','PetalLengthCm','PetalWidthCm']
+for i,col in enumerate(num):
+    plt.figure(figsize=(8,6))
+    sns.boxplot(x=df[col])
+    plt.title(f'Boxplot of {col}')
+    plt.xlabel(col)
+#Select only numerical columns for correlation calculation
+numerical_cols= df.select_dtypes(include=['float64','int64'])
+#Calculate the correlation matrix
+corr=numerical_cols.corr()
+#Create a heatmap of the correlation matrix
+plt.figure(figsize=(10,8))
+sns.heatmap(corr,annot=True,cmap='Blues',fmt='2f',linewidth=0.5)
+plt.title('Correlation Heatmap')
+plt.show()
+#lets visualize differ columns wrt species
+plt.figure(figsize=(15,6))
+sns.countplot(x='SepalLengthCm',data=df,hue=df['Species'],palette='winter')
+plt.show()
+x=df.drop(columns=['Species'])
+y=df['Species']
+x.shape
+y.shape
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=47)
+x_train.shape,x_test.shape,y_train.shape
+lr=LogisticRegression()
+lr.fit(x_train,y_train)
+lr_y_pred =lr.predict(x_test)
+lr_y_pred
+lr_results = confusion_matrix(y_test,lr_y_pred)
+print("Confusion Matrix:")
+print(lr_results)
+print(accuracy_score(y_test,lr_y_pred))
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import cross_val_score
+model=LogisticRegression()
+lg_cv=cross_val_score(model,x,y,scoring='accuracy',cv=4).mean()
+print('cv_score:',lg_cv)
+from sklearn.tree import DecisionTreeClassifier
+model_dt=DecisionTreeClassifier()
+model_dt.fit(x_train,y_train)
+y_pred=model_dt.predict(x_test)
+print("Training accuracy:",model_dt.score(x_train,y_train))
+print("Testing accuracy:",model_dt.score(x_test,y_test))
+#classification report
+print(classification_report(y_test,y_pred))
+print(confusion_matrix(y_test,y_pred))
+print('accuracy_score:',accuracy_score(y_test,y_pred))
+#creating the model 
+model_rfc=RandomForestClassifier(n_estimators=400)
+model_rfc.fit(x_train,y_train)
+y_pred=model_rfc.predict(x_test)
+print("Training accuracy:",model_rfc.score(x_train,y_train))
+print("Testing accuracy:",model_rfc.score(x_test,y_test))
+#classification report
+print(classification_report(y_test,y_pred))
+#confusion matrix
+print(confusion_matrix(y_test,y_pred))
+print('accuracy_score:',accuracy_score(y_test,y_pred))
+from sklearn.model_selection import GridSearchCV,cross_val_score
+rfc_cv=cross_val_score(model,x,y,scoring='accuracy',cv=14).mean()
+print('cv_score:',rfc_cv)
+from sklearn.svm import SVC
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=42)
+model_svc=SVC()
+model_svc.fit(x_train,y_train)
+y_pred=model_svc.predict(x_test)
+training_accuracy=model_svc.score(x_train,y_train)
+testing_accuracy=model_svc.score(x_test,y_test)
+print("Training accuracy:",training_accuracy)
+print("Testing accuracy:",testing_accuracy)
+#classification report 
+print(classification_report(y_test,y_pred))
+#confusion matrix
+print(confusion_matrix(y_test,y_pred))
+print('accuracy_score:',accuracy_score(y_test,y_pred))
+from sklearn.model_selection import GridSearchCV,cross_val_score
+svc_cv=cross_val_score(model,x,y,scoring='accuracy',cv=14).mean()
+print('cv_score:',svc_cv)
+model_gnb=GaussianNB()
+model_gnb.fit(x_train,y_train)
+y_pred=model_gnb.predict(x_test)
+print("training accuracy:", model_gnb.score(x_train,y_train))
+print("testing_accuracy:", model_gnb.score(x_test,y_test))
+#classification report
+print(classification_report(y_test,y_pred))
